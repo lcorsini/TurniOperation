@@ -58,7 +58,7 @@ dictionary = OrderedDict(zip(days, turns))
 
 ## Calendar Section
 service = __create_cal_service()
-calendar='rd6oj0qmc1mulbbroj1e48pll0@group.calendar.google.com'
+calendar='CALENDAR_ID'
 for key in dictionary:
 	print key , 'corresponds to', dictionary[key]
 	if dictionary[key] == '1':
