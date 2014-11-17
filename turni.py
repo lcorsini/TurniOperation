@@ -19,7 +19,6 @@ def __create_sheets_service():
 	with open('credentials', 'rw') as f:
 		credentials = Credentials.new_from_json(f.read())
 	return credentials
-##
 
 ## Spreadsheet Section
 credentials = __create_sheets_service()
@@ -38,10 +37,6 @@ else:
 	turn_list = wks.range('E2:E32')
 	days_list = wks.range('A2:A32')
 	
-#locale.setlocale(locale.LC_TIME, 'it_IT')
-# Fetch a cell range
-#turn_list = wks.range('E2:E31')
-#days_list = wks.range('A2:A31')
 days = []
 for member in days_list:
      #print member.value
@@ -53,19 +48,17 @@ for member in days_list:
      days.append(date_string)
 
 turns = []
-#count = 0
 for member in turn_list:
     #print member.value
     turns.append(member.value)
 
 dictionary = OrderedDict(zip(days, turns))
-print dictionary
+#print dictionary
 
 
 ## Calendar Section
-
 service = __create_cal_service()
-
+calendar='rd6oj0qmc1mulbbroj1e48pll0@group.calendar.google.com'
 for key in dictionary:
 	print key , 'corresponds to', dictionary[key]
 	if dictionary[key] == '1':
@@ -82,6 +75,6 @@ for key in dictionary:
 		event = {'summary' : 'Turno '+dictionary[key],'end' : {'timeZone' : 'Europe/Rome', 'dateTime' : key+"T"+endTime }, 'start' : { 'timeZone' : 'Europe/Rome', 'dateTime' : key+'T'+startTime }}
 	else:
 		continue
-	request = service.events().insert(calendarId='rd6oj0qmc1mulbbroj1e48pll0@group.calendar.google.com', body=event)
+	request = service.events().insert(calendarId=calendar, body=event)
 	response = request.execute()
 	print response
