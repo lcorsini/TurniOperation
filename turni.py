@@ -59,6 +59,10 @@ dictionary = OrderedDict(zip(days, turns))
 ## Calendar Section
 service = __create_cal_service()
 calendar='CALENDAR_ID'
+oldEvents = service.events().list(calendarId=calendar).execute()
+for event in oldEvents['items']:
+    print event['id'] + ' ' + event['summary'] + ' ' + 'deleted'
+    service.events().delete(calendarId=calendar, eventId=event['id']).execute()
 for key in dictionary:
 	print key , 'corresponds to', dictionary[key]
 	if dictionary[key] == '1':
