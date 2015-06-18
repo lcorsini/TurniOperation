@@ -44,9 +44,9 @@ days = []
 for member in days_list:
      #print member.value
      date_string=member.value+" "+month+" "+str(datetime.now().year)
-     locale.setlocale(locale.LC_TIME, 'it_IT')
+     locale.setlocale(locale.LC_TIME, 'it_IT.UTF8')
      date_obj = time.strptime(date_string, '%a %d %B %Y')
-     locale.setlocale(locale.LC_TIME, 'en_US')
+     locale.setlocale(locale.LC_TIME, 'en_US.UTF8')
      date_string = time.strftime('%Y-%m-%d', date_obj)
      days.append(date_string)
 
@@ -60,10 +60,17 @@ pprint.pprint(list(dictionary.items()))
 ## Calendar Section
 service = __create_cal_service()
 calendar = 'CALENDAR_ID'
-oldEvents = service.events().list(calendarId=calendar).execute()
-for event in oldEvents['items']:
-	print 'Event: ' + event['summary'] + '\tEventID: '+event['id'] + '\tdeleted' 
-	service.events().delete(calendarId=calendar, eventId=event['id']).execute()
+oldevents = service.events().list(calendarId=calendar).execute()
+
+while True:
+  oldevents = service.events().list(calendarId=calendar, pageToken=page_token).execute()
+  for event in oldevents['items']:
+        print 'Event: ' + event['summary'] + '\tEventID: '+event['id'] + '\tdeleted'
+        delreq = service.events().delete(calendarId=calendar, eventId=event['id']).execute()
+  page_token = oldevents.get('nextPageToken')
+  if not page_token:
+    break
+
 for key in dictionary:
 	print key , 'corresponds to', dictionary[key]
 	if dictionary[key] == '1':
